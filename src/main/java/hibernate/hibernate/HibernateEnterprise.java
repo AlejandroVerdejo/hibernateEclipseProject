@@ -12,178 +12,266 @@ import org.hibernate.cfg.Configuration;
 public class HibernateEnterprise {
 	private static SessionFactory sf; // this SessionFactory will be created once and used for all the connections
 	private static Productos p;
+
 	HibernateEnterprise() {// constructor
-	// sf = HibernateUtil.getSessionFactory();
-	sf = new
-	Configuration().configure().buildSessionFactory(); // also works
+		// sf = HibernateUtil.getSessionFactory();
+		sf = new Configuration().configure().buildSessionFactory(); // also works
 	}
+
 	public void close() {
-	sf.close();
+		sf.close();
 	}
+
 	public void addProduct(String name, double price) {
-	Session session = sf.openSession();// session es la	variable que tiene el método
-	//save para guardar productos
-	Transaction tx = null;
-	// create the product with the parameters in the method
-	Productos p = new Productos();
-	p.setNombre(name);
-	p.setPrecio(price);
-	// keep it in the database=session.save(p)
-	try {
-	System.out.println("======================================");
-	System.out.printf("Insertando la Fila en la Base de	Datos: %s, %s\n", name, price);
-	System.out.println("======================================");
-	tx = session.beginTransaction();
-	session.save(p);// we INSERT p into the table PRODUCTS
-	tx.commit();// if session.save doesnt produce an exception, we commit; the transaction
-	} catch (Exception e) {// if there is any exception, we	"rollback" and close safely
-	if (tx != null) {
-	tx.rollback();
-	}
-	} finally {
-	session.close();
-	}
-	}
-	public void showProducts() {
-	Session session = sf.openSession();
-	Transaction tx = null;
-	try {
-	tx = session.beginTransaction();
-	List allproducts = session.createQuery("From Productos").list();
-	Iterator it = allproducts.iterator();
-	System.out.println("======================================");
-	System.out.println("Buscando Productos...");
-	System.out.println("======================================");
-	while (it.hasNext()) {
-	// for (Iterator iterator =	allproducts.iterator(); iterator.hasNext();){
-	Productos p = (Productos) it.next();
-	System.out.println("======================================");
-	System.out.println("Id: " + p.getId());
-	System.out.println("Nombre: " +
-	p.getNombre());
-	System.out.println("Precio: " +
-	p.getPrecio());
-	System.out.println("======================================");
-	}
-	tx.commit();
-	System.out.println("======================================");
-	System.out.println("Finalizada la Busqueda...");
-	System.out.println("======================================");
-	} catch (HibernateException e) {
-	if (tx != null)
-	tx.rollback();
-	e.printStackTrace();
-	} finally {
-	session.close();
-	}
-	}
-	public Productos findProductById(int id) {
-	Session session = sf.openSession();
-	Transaction tx = null;
-	Productos p = new Productos();
-	try {
-	System.out.println("======================================");
-	System.out.println("Cargando Producto de la Base de	Datos...");
-	System.out.println("======================================");
-	tx = session.beginTransaction();
-	p = (Productos) session.load(Productos.class, id);
-	tx.commit();
-	System.out.println("======================================");
-	System.out.println("Producto con ID -> " + id);
-	System.out.println("Su Nombre es -> " +
-	p.getNombre());
-	System.out.println("======================================");
-	} catch (ObjectNotFoundException e) {
-	if (tx != null) {
-	System.out.println(e);
-	System.out.println("Product not found");
-	}
-	} catch (Exception e) {
-	if (tx != null) {
-		System.out.println(e);
-		tx.rollback();
-		}
+		Session session = sf.openSession();// session es la variable que tiene el método
+		// save para guardar productos
+		Transaction tx = null;
+		// create the product with the parameters in the method
+		Productos p = new Productos();
+		p.setNombre(name);
+		p.setPrecio(price);
+		// keep it in the database=session.save(p)
+		try {
+			System.out.println("======================================");
+			System.out.printf("Insertando la Fila en la Base de	Datos: %s, %s\n", name, price);
+			System.out.println("======================================");
+			tx = session.beginTransaction();
+			session.save(p);// we INSERT p into the table PRODUCTS
+			tx.commit();// if session.save doesnt produce an exception, we commit; the transaction
+		} catch (Exception e) {// if there is any exception, we "rollback" and close safely
+			if (tx != null) {
+				tx.rollback();
+			}
 		} finally {
-		session.close();
+			session.close();
+		}
+	}
+
+	public void showProducts() {
+		Session session = sf.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			List allproducts = session.createQuery("From Productos").list();
+			Iterator it = allproducts.iterator();
+			System.out.println("======================================");
+			System.out.println("Buscando Productos...");
+			System.out.println("======================================");
+			while (it.hasNext()) {
+				// for (Iterator iterator = allproducts.iterator(); iterator.hasNext();){
+				Productos p = (Productos) it.next();
+				System.out.println("======================================");
+				System.out.println("Id: " + p.getId());
+				System.out.println("Nombre: " + p.getNombre());
+				System.out.println("Precio: " + p.getPrecio());
+				System.out.println("======================================");
+			}
+			tx.commit();
+			System.out.println("======================================");
+			System.out.println("Finalizada la Busqueda...");
+			System.out.println("======================================");
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+	}
+
+	public Productos findProductById(int id) {
+		Session session = sf.openSession();
+		Transaction tx = null;
+		Productos p = new Productos();
+		try {
+			System.out.println("======================================");
+			System.out.println("Cargando Producto de la Base de	Datos...");
+			System.out.println("======================================");
+			tx = session.beginTransaction();
+			p = (Productos) session.load(Productos.class, id);
+			tx.commit();
+			System.out.println("======================================");
+			System.out.println("Producto con ID -> " + id);
+			System.out.println("Su Nombre es -> " + p.getNombre());
+			System.out.println("======================================");
+		} catch (ObjectNotFoundException e) {
+			if (tx != null) {
+				System.out.println(e);
+				System.out.println("Product not found");
+			}
+		} catch (Exception e) {
+			if (tx != null) {
+				System.out.println(e);
+				tx.rollback();
+			}
+		} finally {
+			session.close();
 		}
 		return p;
-		}
-		public void deleteProductById(int id) {
+	}
+
+	public void deleteProductById(int id) {
 		Productos p = new Productos();
 		Session session = sf.openSession();
 		Transaction tx = null;
 		try {
-		System.out.println("======================================");
-		System.out.println("Buscando Producto con ID -> " +
-		id);
-		System.out.println("======================================");
-		tx = session.beginTransaction();
-		p = (Productos) session.get(Productos.class, id);
-		if (p != null) {
-		System.out.println("======================================");
-		System.out.println("Borrando Producto de la Base de Datos...");
-		System.out.println("======================================");
-		session.delete(p);
-		tx.commit();
-		System.out.println("======================================");
-		System.out.printf(
-		"Producto Borrado de la Base de Datos ..." + "\n ID -> %s\n Nombre -> %s\n Precio -> %s",
-		p.getId(), p.getNombre(),
-		p.getPrecio());
-		System.out.println("\n======================================");
-		} else {
-		System.out.println("======================================");
-		System.out.println("No Se Encontro Ningun Producto con ID -> " + id);
-		System.out.println("======================================");
-		}
-		} catch (Exception e) {
-		if (tx != null) {
-		tx.rollback();
-		}
-		} finally {
-		session.close();
-		}
-		}
-		public void updateProductById(int id, String newName, double newPrice) {
-				Productos p = new Productos();
-				Session session = sf.openSession();
-				Transaction tx = null;
-				try {
+			System.out.println("======================================");
+			System.out.println("Buscando Producto con ID -> " + id);
+			System.out.println("======================================");
+			tx = session.beginTransaction();
+			p = (Productos) session.get(Productos.class, id);
+			if (p != null) {
 				System.out.println("======================================");
-				System.out.println("Modificando el Producto de la Base de Datos...");
-				System.out.println("Con los Siguientes Datos...");
-				System.out.println("ID -> " + id);
-				System.out.println("Nombre -> " + newName);
-				System.out.println("Precio -> " + newPrice);
+				System.out.println("Borrando Producto de la Base de Datos...");
 				System.out.println("======================================");
-				tx = session.beginTransaction();
-				p = (Productos) session.load(Productos.class,
-				id);// we load the product
-				System.out.println("======================================");
-				System.out.println("Datos del Producto en la Base de Datos...");
-				System.out.println("======================================");
-				System.out.printf(" ID -> %s\n Nombre -> %s\n Precio -> %s",p.getId(), p.getNombre(), p.getPrecio());
-				System.out.println("\n======================================");
-				p.setPrecio(newPrice);// we change the properties
-				p.setNombre(newName);
-				session.update(p);// we update the values in the database
+				session.delete(p);
 				tx.commit();
 				System.out.println("======================================");
-				System.out.println("Producto Modificado");
-				System.out.println("======================================");
-				System.out.printf("Datos del Producto Modificado..." + "\n ID -> %s\n Nombre -> %s\n Precio -> %s",
-				p.getId(), p.getNombre(),
-				p.getPrecio());
+				System.out.printf(
+						"Producto Borrado de la Base de Datos ..." + "\n ID -> %s\n Nombre -> %s\n Precio -> %s",
+						p.getId(), p.getNombre(), p.getPrecio());
 				System.out.println("\n======================================");
-				} catch (Exception e) {
+			} else {
 				System.out.println("======================================");
-				System.out.println("No Se Encontro el Producto con ID -> " + id);
+				System.out.println("No Se Encontro Ningun Producto con ID -> " + id);
 				System.out.println("======================================");
-				if (tx != null) {
+			}
+		} catch (Exception e) {
+			if (tx != null) {
 				tx.rollback();
-				}
-				} finally {
-				session.close();
-				}
-				}
+			}
+		} finally {
+			session.close();
+		}
 	}
+
+	public void updateProductById(int id, String newName, double newPrice) {
+		Productos p = new Productos();
+		Session session = sf.openSession();
+		Transaction tx = null;
+		try {
+			System.out.println("======================================");
+			System.out.println("Modificando el Producto de la Base de Datos...");
+			System.out.println("Con los Siguientes Datos...");
+			System.out.println("ID -> " + id);
+			System.out.println("Nombre -> " + newName);
+			System.out.println("Precio -> " + newPrice);
+			System.out.println("======================================");
+			tx = session.beginTransaction();
+			p = (Productos) session.load(Productos.class, id);// we load the product
+			System.out.println("======================================");
+			System.out.println("Datos del Producto en la Base de Datos...");
+			System.out.println("======================================");
+			System.out.printf(" ID -> %s\n Nombre -> %s\n Precio -> %s", p.getId(), p.getNombre(), p.getPrecio());
+			System.out.println("\n======================================");
+			p.setPrecio(newPrice);// we change the properties
+			p.setNombre(newName);
+			session.update(p);// we update the values in the database
+			tx.commit();
+			System.out.println("======================================");
+			System.out.println("Producto Modificado");
+			System.out.println("======================================");
+			System.out.printf("Datos del Producto Modificado..." + "\n ID -> %s\n Nombre -> %s\n Precio -> %s",
+					p.getId(), p.getNombre(), p.getPrecio());
+			System.out.println("\n======================================");
+		} catch (Exception e) {
+			System.out.println("======================================");
+			System.out.println("No Se Encontro el Producto con ID -> " + id);
+			System.out.println("======================================");
+			if (tx != null) {
+				tx.rollback();
+			}
+		} finally {
+			session.close();
+		}
+	}
+	public void showClients() {
+		Session session = sf.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			List allclients = session.createQuery("From Clientes").list();
+			Iterator it = allclients.iterator();
+			System.out.println("======================================");
+			System.out.println("Buscando Clientes...");
+			System.out.println("======================================");
+			while (it.hasNext()) {
+				// for (Iterator iterator = allproducts.iterator(); iterator.hasNext();){
+				Clientes c = (Clientes) it.next();
+				System.out.println("======================================");
+				System.out.println("Id: " + c.getId());
+				System.out.println("Nombre: " + c.getNombre());
+				System.out.println("Precio: " + c.getPais());
+				System.out.println("======================================");
+			}
+			tx.commit();
+			System.out.println("======================================");
+			System.out.println("Finalizada la Busqueda...");
+			System.out.println("======================================");
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+	}
+	public void addClient(String name, String pais) {
+		Session session = sf.openSession();// session es la variable que tiene el método
+		// save para guardar clientes
+		Transaction tx = null;
+		// create the product with the parameters in the method
+		Clientes c = new Clientes();
+		c.setNombre(name);
+		c.setPais(pais);
+		// keep it in the database=session.save(p)
+		try {
+			System.out.println("======================================");
+			System.out.printf("Insertando la Fila en la Base de	Datos: %s, %s\n", name, pais);
+			System.out.println("======================================");
+			tx = session.beginTransaction();
+			session.save(c);// we INSERT p into the table CLIENTES
+			tx.commit();// if session.save doesnt produce an exception, we commit; the transaction
+		} catch (Exception e) {// if there is any exception, we "rollback" and close safely
+			if (tx != null) {
+				tx.rollback();
+			}
+		} finally {
+			session.close();
+		}
+	}
+	public void deleteClientById(int id) {
+		Clientes c = new Clientes();
+		Session session = sf.openSession();
+		Transaction tx = null;
+		try {
+			System.out.println("======================================");
+			System.out.println("Buscando Cliente con ID -> " + id);
+			System.out.println("======================================");
+			tx = session.beginTransaction();
+			c = (Clientes) session.get(Clientes.class, id);
+			if (c != null) {
+				System.out.println("======================================");
+				System.out.println("Borrando Producto de la Base de Datos...");
+				System.out.println("======================================");
+				session.delete(c);
+				tx.commit();
+				System.out.println("======================================");
+				System.out.printf(
+						"Cliente Borrado de la Base de Datos ..." + "\n ID -> %s\n Nombre -> %s\n Pais -> %s",
+						c.getId(), c.getNombre(), c.getPais());
+				System.out.println("\n======================================");
+			} else {
+				System.out.println("======================================");
+				System.out.println("No Se Encontro Ningun Cliente con ID -> " + id);
+				System.out.println("======================================");
+			}
+		} catch (Exception e) {
+			if (tx != null) {
+				tx.rollback();
+			}
+		} finally {
+			session.close();
+		}
+	}
+}
