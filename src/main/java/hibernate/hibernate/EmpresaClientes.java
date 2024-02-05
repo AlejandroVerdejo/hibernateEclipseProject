@@ -11,7 +11,6 @@ import org.hibernate.cfg.Configuration;
 
 public class EmpresaClientes {
 	private static SessionFactory sf;
-	//private static Clientes c;
 	
 	public EmpresaClientes()
 	{
@@ -79,6 +78,76 @@ public class EmpresaClientes {
 			sesion.close();
 		}
 	}
+	public void mostrarClientesPais(String pais) 
+	{
+		Session sesion = sf.openSession();
+		Transaction trans = null;
+		try 
+		{
+			trans = sesion.beginTransaction();
+			List clientes = sesion.createQuery("From Clientes Where pais = '" + pais + "'").list();
+			Iterator it = clientes.iterator();
+			System.out.println("--------------------------------------");
+			System.out.println("Pais: " + pais);
+			System.out.println("Clientes: " + clientes.size());
+			System.out.println("--------------------------------------");
+			while (it.hasNext()) 
+			{
+				Clientes c = (Clientes) it.next();
+				System.out.println("--------------------------------------");
+				System.out.println("Id: " + c.getId());
+				System.out.println("Nombre: " + c.getNombre());
+				System.out.println("Precio: " + c.getPais());
+				System.out.println("--------------------------------------");
+			}
+			trans.commit();
+		} 
+		catch (HibernateException e) 
+		{
+			if (trans != null)
+			{
+				trans.rollback();
+			}
+			e.printStackTrace();
+		} 
+		finally 
+		{
+			sesion.close();
+		}
+	}
+	public void mostrarClientesNombre(String nombre) 
+	{
+		Session sesion = sf.openSession();
+		Transaction trans = null;
+		try 
+		{
+			trans = sesion.beginTransaction();
+			List clientes = sesion.createQuery("From Clientes Where nombre = '" + nombre + "'").list();
+			Iterator it = clientes.iterator();
+			while (it.hasNext()) 
+			{
+				Clientes c = (Clientes) it.next();
+				System.out.println("--------------------------------------");
+				System.out.println("Id: " + c.getId());
+				System.out.println("Nombre: " + c.getNombre());
+				System.out.println("Precio: " + c.getPais());
+				System.out.println("--------------------------------------");
+			}
+			trans.commit();
+		} 
+		catch (HibernateException e) 
+		{
+			if (trans != null)
+			{
+				trans.rollback();
+			}
+			e.printStackTrace();
+		} 
+		finally 
+		{
+			sesion.close();
+		}
+	}
 	public void addCliente(String nombre, String pais) 
 	{
 		Session sesion = sf.openSession();
@@ -138,27 +207,26 @@ public class EmpresaClientes {
 			sesion.close();
 		}
 	}
-	public void eliminarClienteNombre(String nombre) 
+	public void eliminarClienteNombre(String nombre) //????????
 	{
-		Clientes c = new Clientes();
 		Session sesion = sf.openSession();
 		Transaction trans = null;
 		try 
 		{
 			trans = sesion.beginTransaction();
-			c = (Clientes) sesion.get(Clientes.class, nombre);
-			if (c != null) 
+			List clientes = sesion.createQuery("From Clientes Where nombre = '" + nombre + "'").list();
+			Iterator it = clientes.iterator();
+			while (it.hasNext()) 
 			{
+				Clientes c = (Clientes) it.next();
+				System.out.println("--------------------------------------");
+				System.out.println("Se eliminara al cliente ID: " + c.getId() + " Nombre: " + c.getNombre() + " Pais: " + c.getPais());
+				System.out.println("--------------------------------------");
 				sesion.delete(c);
-				trans.commit();
-			} 
-			else 
-			{
-				System.out.println("--------------------------------------");
-				System.out.println("No se ha podido borrar el cliente con el nombre " + nombre);
-				System.out.println("--------------------------------------");
 			}
+			trans.commit();
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			if (trans != null) {
 				trans.rollback();
 			}
