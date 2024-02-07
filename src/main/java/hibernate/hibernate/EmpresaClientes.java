@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 public class EmpresaClientes {
+	
 	private static SessionFactory sf;
 	
 	public EmpresaClientes()
@@ -36,7 +37,7 @@ public class EmpresaClientes {
 				System.out.println("--------------------------------------");
 				System.out.println("Id: " + c.getId());
 				System.out.println("Nombre: " + c.getNombre());
-				System.out.println("Precio: " + c.getPais());
+				System.out.println("Pais: " + c.getPais());
 				System.out.println("--------------------------------------");
 			}
 			trans.commit();
@@ -66,7 +67,7 @@ public class EmpresaClientes {
 			System.out.println("--------------------------------------");
 			System.out.println("Id: " + c.getId());
 			System.out.println("Nombre: " + c.getNombre());
-			System.out.println("Precio: " + c.getPais());
+			System.out.println("Pais: " + c.getPais());
 			System.out.println("--------------------------------------");
 		} 
 		catch (HibernateException e) 
@@ -97,7 +98,7 @@ public class EmpresaClientes {
 				System.out.println("--------------------------------------");
 				System.out.println("Id: " + c.getId());
 				System.out.println("Nombre: " + c.getNombre());
-				System.out.println("Precio: " + c.getPais());
+				System.out.println("Pais: " + c.getPais());
 				System.out.println("--------------------------------------");
 			}
 			trans.commit();
@@ -130,7 +131,7 @@ public class EmpresaClientes {
 				System.out.println("--------------------------------------");
 				System.out.println("Id: " + c.getId());
 				System.out.println("Nombre: " + c.getNombre());
-				System.out.println("Precio: " + c.getPais());
+				System.out.println("Pais: " + c.getPais());
 				System.out.println("--------------------------------------");
 			}
 			trans.commit();
@@ -164,7 +165,7 @@ public class EmpresaClientes {
 			System.out.println("Cliente añadido:");
 			System.out.println("Id: " + c.getId());
 			System.out.println("Nombre: " + c.getNombre());
-			System.out.println("Precio: " + c.getPais());
+			System.out.println("Pais: " + c.getPais());
 			System.out.println("--------------------------------------");
 		} 
 		catch (Exception e) 
@@ -257,7 +258,7 @@ public class EmpresaClientes {
 			System.out.println("Nuevos datos:");
 			System.out.println("Id: " + c.getId());
 			System.out.println("Nombre: " + c.getNombre());
-			System.out.println("Precio: " + c.getPais());
+			System.out.println("Pais: " + c.getPais());
 			System.out.println("--------------------------------------");
 		} 
 		catch (Exception e) 
